@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { MovieCard } from '../components/MovieCard';
 
 export const HomePage = () => {
 
@@ -7,7 +8,7 @@ export const HomePage = () => {
   return (
     <>
       {/* Nav Container */}
-      <nav className='w-full mx-auto p-6 bg-zinc-900 '>
+      <nav className='w-full mx-auto p-6 bg-zinc-900 mb-7'>
           {/* Flex Container For All Items */}
           <div className='flex items-center justify-between'>
             {/* Flex Container For Logo/Menu */}
@@ -43,13 +44,9 @@ export const HomePage = () => {
           </div> 
       </nav>
 
-      <ul>
-          {
-            movies.map( movie => (
-              <li key={movie}>{movie}</li>
-            ))
-          }
-      </ul>
+      <dir className='m-auto flex flex-wrap justify-center'>
+        <MovieCard />
+      </dir>
     </>
   )
 }
