@@ -1,9 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MovieCard } from '../components/MovieCard';
+
+let API_key  = "&api_key=ff56685198facead6ad507c2f07f55d4";
+let base_url = "https://api.themoviedb.org/3";
+let url      = base_url+"/discover/movie?sort_by=popularity.desc"+API_key;
 
 export const HomePage = () => {
 
-  const [movies, setMovies] = useState(['The inmortal', 'Ghost Rider', 'Van Hellsing']);
+  const [movieData, setMovies] = useState([]);
+  const [url_set, setUrl] = useState(url)
+
+  useEffect(() => {
+    fetch(url_set).then(res => res.json()).then(data =>{
+      console.log(data.results);
+      setMovies(data.results);
+    })
+  }, [url_set])
+  
 
   return (
     <>
@@ -14,7 +27,7 @@ export const HomePage = () => {
             {/* Flex Container For Logo/Menu */}
             <div className='flex items-center gap-4 text-white'>
                 {/* Logo */}
-                <img src="https://flowbite.com/docs/images/logo.svg" className='h-6 mr-3 sm:h-9' alt="" />
+                <img src="https://flowbite.com/docs/images/logo.svg" className='h-6 mr-3 sm:h-9' alt="company-logo" />
                 {/* Links */}
                 <div className='flex items-center gap-4'>
                   <a href="">Home</a>
@@ -38,14 +51,20 @@ export const HomePage = () => {
                   </svg>
                 </button>
               </div>
-              <button type='button' className='bg-blue-700 font-medium rounded-lg px-5 py-2.5'>Logourt</button>
+              <button type='button' className='bg-blue-700 font-medium rounded-lg px-5 py-2.5'>Logout</button>
 
             </div>         
           </div> 
       </nav>
 
       <dir className='m-auto flex flex-wrap justify-center'>
-        <MovieCard />
+
+        {
+          movieData.map((res,pos) => {
+            
+            return( <MovieCard info={res} key={pos} /> )
+          })
+        }
       </dir>
     </>
   )
