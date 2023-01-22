@@ -1,12 +1,40 @@
-import { Route, Routes } from 'react-router-dom'
+
+import { Route, Routes, Navigate } from 'react-router-dom'
+
 import { LoginPage } from '../auth/pages/LoginPage'
+import { useAuthStore } from '../hooks'
 import { HomePage } from '../movie/pages/HomePage'
 
 export const AppRouter = () => {
+
+  const { status } = useAuthStore();
+
+  /* if ( status === 'checking' ){
+    return (
+      <h3>Loading...</h3>
+    )
+  } */
+
   return (
     <Routes>
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/home' element={<HomePage />} />
+
+        {
+          ( status === 'not-authenticated')
+            ?(
+              <>
+                <Route path='/login' element={<LoginPage />} />
+                <Route path="/*" element={ <Navigate to="/login" /> } />
+              </>
+            )
+            : (
+
+              <>
+                <Route path='/' element={<HomePage />} />
+                <Route path="/*" element={ <Navigate to="/" /> } />
+              </>
+            )
+        }
+
     </Routes>
   )
 }

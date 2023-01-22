@@ -18,7 +18,7 @@ export const useAuthStore = () => {
             const { data } = await loginApi.post('/login', {
                 email, password
             });
-            console.log(data.token)
+            /* console.log(data.token) */
             localStorage.setItem('token' , data.token);
             dispatch( onLogin({ token: data.token }));
 
