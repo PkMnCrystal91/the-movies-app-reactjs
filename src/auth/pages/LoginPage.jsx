@@ -1,6 +1,28 @@
-import React from 'react'
+import { useEffect } from 'react';
+import Swal from 'sweetalert2';
+import { useAuthStore, useForm } from '../../hooks';
+
+const loginFormFields = {
+    loginEmail: '',
+    loginPassword: '',
+}
 
 export const LoginPage = () => {
+
+    const { startLogin, errorMessage} = useAuthStore();
+    const { loginEmail, loginPassword, onInputChange:onLoginInputChange } = useForm( loginFormFields );
+
+    const loginSubmit = ( event ) => {
+        event.preventDefault();
+        startLogin({ email: loginEmail, password: loginPassword });
+    }
+
+    useEffect(() => {
+        if ( errorMessage !== undefined ) {
+            Swal.fire('Error authenticating user', errorMessage, 'error');
+        }
+    }, [errorMessage]);
+
   return (
     /* Backgroung Container */
     <div className='flex items-center justify-center h-screen bg-zinc-700'>
@@ -15,20 +37,28 @@ export const LoginPage = () => {
 
                 <h2 className='font-bold font-sans text-center text-white'>The Movies App</h2>
 
-                <form className='flex flex-col' action="">
+                <form onSubmit={ loginSubmit } className='flex flex-col' action="">
                     <input
                         type="email"
                         placeholder="Enter your email address"
                         className="p-2 px-4 text-center text-white bg-zinc-800 border border-zinc-600 placeholder:text-xs placeholder:text-center md:text-left placeholder:md:text-left focus:outline-none"
+                        name="loginEmail"
+                        value={ loginEmail }
+                        onChange={ onLoginInputChange }
                     />
                     <input
                         type="password"
                         placeholder="Enter your email address"
-                        className="p-2 px-4 text-center text-white bg-zinc-800 border border-zinc-600 placeholder:text-xs placeholder:text-center md:text-left placeholder:md:text-left focus:outline-none" 
+                        className="p-2 px-4 text-center text-white bg-zinc-800 border border-zinc-600 placeholder:text-xs placeholder:text-center md:text-left placeholder:md:text-left focus:outline-none"
+                        name="loginPassword"
+                        value={ loginPassword }
+                        onChange={ onLoginInputChange } 
                     />
 
                     <button
                         className="px-5 py-3 text-xs rounded-md text-zinc-800 bg-lime-500 hover:bg-lime-700 hover:text-white duration-500 mt-4"
+                        type="submit"
+                        value="Login"
                     >
                         Login
                     </button>
