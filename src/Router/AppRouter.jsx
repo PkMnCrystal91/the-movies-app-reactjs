@@ -1,4 +1,5 @@
 
+import { useEffect } from 'react'
 import { Route, Routes, Navigate } from 'react-router-dom'
 
 import { LoginPage } from '../auth/pages/LoginPage'
@@ -7,7 +8,12 @@ import { HomePage } from '../movie/pages/HomePage'
 
 export const AppRouter = () => {
 
-  const { status } = useAuthStore();
+  const { status, checkToken } = useAuthStore();
+
+  useEffect(() => {
+    checkToken();
+  }, [])
+  
 
   /* if ( status === 'checking' ){
     return (

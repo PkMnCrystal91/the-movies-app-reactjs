@@ -7,6 +7,17 @@ const loginApi = axios.create({
     baseURL: "https://reqres.in/api/"
 });
 
+/* To keep session */
+loginApi.interceptors.request.use( config => {
+
+    config.headers = {
+        ...config.headers,
+        'x-token': localStorage.getItem('token')
+    }
+
+    return config;
+})
+
 export const useAuthStore = () => {
 
     const { status, user, errorMessage } = useSelector( state => state.auth );
@@ -33,6 +44,20 @@ export const useAuthStore = () => {
         dispatch(onLogout());
     }
 
+    const checkToken = async() => {
+        const token = localStorage.getItem('token');
+        if( !token ) return dispatch( onLogout() );
+
+        try {
+            const { data } = await loginApi.get('/login');
+            localStorage.setItem('token', data.token );
+            dispatch( onLogin({ token: data.token}));
+        } catch(error) {
+            localStorage.clear();
+            dispatch(onLogout());
+        }
+    }
+
     return {
         //* Properties
         errorMessage,
@@ -41,7 +66,8 @@ export const useAuthStore = () => {
 
         //*Methods
         startLogin,
-        startLogout
+        startLogout,
+        checkToken
     }
 
 }

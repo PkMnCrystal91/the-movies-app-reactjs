@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react'
+import { useAuthStore } from '../../hooks';
 import { MovieCard } from '../components/MovieCard';
 
 let API_key  = "&api_key=ff56685198facead6ad507c2f07f55d4";
 let base_url = "https://api.themoviedb.org/3";
 let url      = base_url+"/discover/movie?sort_by=popularity.desc"+API_key;
+let arr = ["Popular", "Kids", "Comedie", "Drama"]
 
 export const HomePage = () => {
+
+  const { startLogout} = useAuthStore();
 
   const [movieData, setMovies] = useState([]);
   const [url_set, setUrl] = useState(url)
@@ -17,6 +21,27 @@ export const HomePage = () => {
     })
   }, [url_set])
   
+  const getData=(movieType)=>{
+
+      if(movieType=="Popular")
+      {
+          url=base_url+"/discover/movie?sort_by=popularity.desc"+API_key;
+      }
+      if(movieType=="Kids")
+      {
+          url=base_url+"/discover/movie?certification_country=US&certification.lte=G&sort_by=popularity.desc"+API_key;
+      }
+      if(movieType=="Drama")
+      {
+          url=base_url+"/discover/movie?with_genres=18&primary_release_year=2014"+API_key;
+      }
+      if(movieType=="Comedie")
+      {
+          url=base_url+"/discover/movie?with_genres=35&with_cast=23659&sort_by=revenue.desc"+API_key;
+      }
+      setUrl(url);
+
+  }
 
   return (
     <>
@@ -30,8 +55,13 @@ export const HomePage = () => {
                 <img src="https://flowbite.com/docs/images/logo.svg" className='h-6 mr-3 sm:h-9' alt="company-logo" />
                 {/* Links */}
                 <div className='flex items-center gap-4'>
-                  <a href="">Home</a>
-                  <a href="">Favorites</a>
+                  {
+                    arr.map((value) => {
+                      return(
+                        <a href="" key={value} onClick={(e)=>{getData(e.target.name)}}>{value}</a>
+                      )
+                    })
+                  }
                 </div>
             </div>
 
@@ -51,7 +81,7 @@ export const HomePage = () => {
                   </svg>
                 </button>
               </div>
-              <button type='button' className='bg-blue-700 font-medium rounded-lg px-5 py-2.5'>Logout</button>
+              <button type='button' className='bg-blue-700 font-medium rounded-lg px-5 py-2.5' onClick={ startLogout }>Logout</button>
 
             </div>         
           </div> 
